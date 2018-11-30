@@ -1,0 +1,3 @@
+DataInFileName=DataInFile.txt
+DataOutFileName=DataOutFile.txt
+LogFileName=Log.txt
