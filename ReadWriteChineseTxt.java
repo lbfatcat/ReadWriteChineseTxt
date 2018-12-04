@@ -141,6 +141,14 @@ public class ReadWriteChineseTxt
         			ioe.printStackTrace();
         		}
         	}
+        	if(null!= logWriter)
+        	{
+        		try {
+        			logWriter.close();
+        		}catch(IOException ioe) {
+        			ioe.printStackTrace();
+        		}
+        	}
         }
 	}
 }  
