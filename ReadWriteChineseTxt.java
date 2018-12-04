@@ -4,7 +4,7 @@ public class ReadWriteChineseTxt
 {  
 	File inFile;
 	File dataInfile, dataOutFile, logFile;
-	BufferedWriter logWriter;
+	// BufferedWriter logWriter;
 	int logLineCount=0;
 	
 	class LineEmptyException extends Exception
@@ -70,12 +70,6 @@ public class ReadWriteChineseTxt
 		
 		this.logFile= new File(this.ExtractConfigureFileName(thirdLine));
 		
-		try{
-			this.logWriter= new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile)));
-		}catch (FileNotFoundException e) 
-        {  
-            System.out.println("log file is not fond");  
-        } 
 		
 	}
 	
@@ -86,19 +80,11 @@ public class ReadWriteChineseTxt
 		return fileName;
 	}
 	
-	void writeLog(String logMsg)
+	void writeLog(String logMsg,BufferedWriter bw)
 	{
 		try {
-			this.logWriter.write(logMsg+this.logLineCount+"\r\n");
+			bw.write(logMsg+this.logLineCount+"\n");
 			this.logLineCount++;
-			if(this.logLineCount==1133)
-			{
-				System.out.println("Reaching edge point");
-			}
-			if(this.logLineCount>1133)
-				System.out.println("log written "+ this.logLineCount+": "+logMsg+"\r\n");
-			if(this.logLineCount%10==0)
-				System.out.println("Log line Count"+this.logLineCount);
 		}catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -111,17 +97,23 @@ public class ReadWriteChineseTxt
 		
 		BufferedReader dataReader=null;
 		BufferedWriter dataWriter=null;
+		BufferedWriter logWriter=null;
 		
 		try {
 			dataReader = new BufferedReader(new InputStreamReader(new FileInputStream(ins.dataInfile)));
 			dataWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ins.dataOutFile)));
+			logWriter  = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(ins.logFile)));
 			
 			String line="";
 			int lineCount=0;
 			
 			while((line= dataReader.readLine())!=null )
 			{
-				ins.writeLog(line);
+				ins.writeLog(line,logWriter);
+				
+				dataWriter.write(line);
+				dataWriter.newLine();
+				
 				lineCount++;
 				if(lineCount%10==0)
 					System.out.println("line count: "+ lineCount);
